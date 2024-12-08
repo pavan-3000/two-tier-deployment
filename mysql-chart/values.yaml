@@ -1,0 +1,15 @@
+name: mysql
+image:
+  name: mysql
+  version: latest
+
+env:
+  MYSQL_ROOT_PASSWORD: admin
+  MYSQL_DB: mydb
+
+replicas: 1
+
+port: 3306
+
+mysql:
+  dbName: mydb

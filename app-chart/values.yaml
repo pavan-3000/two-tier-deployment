@@ -1,0 +1,21 @@
+# values.yaml
+
+name: app
+image:
+  name: pav30/app
+  version: latest
+mysql:
+  host: mysql
+  user: root
+  password: admin
+  db: mydb
+port: 5000
+replicas: 1
+
+
+service:
+  protocol: TCP
+  targetPort: 5000
+  port: 80
+  nodePort: 30004
+  type: NodePort
