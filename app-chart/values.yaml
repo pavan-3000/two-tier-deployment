@@ -1,9 +1,7 @@
 # values.yaml
 
 name: app
-image:
-  name: pav30/app
-  version: latest
+image: pav30/app:latest
 mysql:
   host: mysql
   user: root
