@@ -54,33 +54,53 @@ pipeline {
             }
         }
 
-        stage('update k8s image') {
+     
+        stage('Update Kubernetes Image') {
             steps {
                 sh '''
-                
-                sed -i 's|image: *.*|image: 339713101508.dkr.ecr.ap-south-1.amazonaws.com/two-tier:${BUILD_NUMBER}|' ./app-chart/values.yaml
+                    # Print the BUILD_NUMBER to ensure it's set correctly
+                    echo "BUILD_NUMBER: ${BUILD_NUMBER}"
+                    
+                    # Print the image line before applying sed
+                    echo "Before sed:"
+                    cat ./app-chart/values.yaml | grep image:
+        
+                    # Update the image tag with the build number
+                    sed -i "s|image: *.*|image: 339713101508.dkr.ecr.ap-south-1.amazonaws.com/two-tier:${BUILD_NUMBER}|" ./app-chart/values.yaml
+
+        
+                    # Print the image line after applying sed
+                    echo "After sed:"
+                    cat ./app-chart/values.yaml | grep image:
+        
+                    # Check if there are changes to commit
+                    git diff ./app-chart/values.yaml
+                    git status
+        
+                    # Explicitly add the file and commit if there are changes
+                    git add ./app-chart/values.yaml
+                    git commit -m "Updated image"
                 '''
             }
         }
-
+        
         stage('Push to GitHub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'github', passwordVariable: 'pass', usernameVariable: 'user')]) {
+                withCredentials([usernamePassword(credentialsId: 'github', passwordVariable: 'password', usernameVariable: 'name')]) {
                     sh '''
-                    git config user.name "pavan-3000"
-                    git config user.email "pavansingh3000@gmail.com"
-
-                    # Set the remote URL with credentials
-                    git remote set-url origin https://${user}:${pass}@github.com/pavan-3000/two-tier-deployment.git
-
-                    # Add, commit, and push changes
-                    git add .
-                    git commit -m "Automated commit from Jenkins pipeline"
-                    git push origin main
+                        git config user.name "pavan-3000"
+                        git config user.email "pavansingh3000@gmail.com"
+                        # Set the remote URL with credentials
+                        echo ${name}
+                        echo "Using remote URL: https://${name}:${password}@github.com/pavan-3000/two-tier-deployment.git"
+                        git remote set-url origin https://${name}:${password}@github.com/pavan-3000/two-tier-deployment.git    
+                        git push origin main
                     '''
                 }
             }
         }
+
+       
 
 
     }
