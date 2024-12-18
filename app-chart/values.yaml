@@ -1,7 +1,7 @@
 # values.yaml
 
 name: app
-image: 339713101508.dkr.ecr.ap-south-1.amazonaws.com/two-tier:29
+image: 339713101508.dkr.ecr.ap-south-1.amazonaws.com/two-tier:30
 mysql:
   host: mysql
   user: root
